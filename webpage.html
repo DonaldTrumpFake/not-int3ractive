@@ -34,12 +34,40 @@
 
 
 <h1 class = header style="text-align:center;">Timthraill</h1>
+
+<label for="avatar">Choose file</label>
+
+<input type="file" id="file-input" />
+<h3>Contents of the file:</h3>
+<pre id="file-content"></pre>
+
 <div class = centermap id="mapid" style="width: 800px; height: 500px ;"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.4.0/gpx.min.js"></script>
 
 <script>
+
+	function readSingleFile(e) {
+  	var file = e.target.files[0];
+	  if (!file) {
+	    return;
+	  }
+	  var reader = new FileReader();
+	  reader.onload = function(e) {
+	    var contents = e.target.result;
+	    displayContents(contents);
+	  };
+	  reader.readAsText(file);
+	}
+
+	function displayContents(contents) {
+	  var element = document.getElementById('file-content');
+	  element.textContent = contents;
+	}
+
+	document.getElementById('file-input')
+	  .addEventListener('change', readSingleFile, false);
 
 	var mymap = L.map('mapid').setView([55.941530037671328, -4.317962815985084], 15);
 	
@@ -51,7 +79,7 @@
 		id: 'mapbox.streets'
 	}).addTo(mymap);
 
-
+		
 	var gpx = '/home/ross/CS3/ISH/1.gpx';
 		new L.GPX(gpx, {async: true}).on('loaded', function(e) {
   		map.fitBounds(e.target.getBounds());	
