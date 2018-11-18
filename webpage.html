@@ -80,7 +80,7 @@
 	}).addTo(mymap);
 
 		
-	var gpx = '/home/ross/CS3/ISH/1.gpx';
+	var gpx = '1.gpx';
 		new L.GPX(gpx, {async: true}).on('loaded', function(e) {
   		map.fitBounds(e.target.getBounds());	
 	}).addTo(mymap);
