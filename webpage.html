@@ -69,40 +69,33 @@ body {
 </head>
 
 <body>
+	<h1 class = header style="text-align:center;">Timthraill</h1>
+	<label for="avatar" id = "input-label" > Upload file: </label>
+	<p id="input-label"></p>
+	<input type="file" id="file-input" size="60"/>
+	<div class = centermap id="mapid" style="width: 800px; height: 500px ;"></div>
 
-  <!-- <label for="image_uploads">Choose images to upload (PNG, JPG)</label>
-      <input type="file" id="image_uploads" name="image_uploads" accept=".jpg, .jpeg, .png" multiple> -->
-
-
-
-<h1 class = header style="text-align:center;">Timthraill</h1>
-<label for="avatar" id = "input-label" > Upload file: </label>
-<p id="input-label">
-</p>
-<p></p>
-<input type="file" id="file-input" size="60"/>
-
-<div class = centermap id="mapid" style="width: 800px; height: 500px ;"></div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.4.0/gpx.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.4.0/gpx.min.js"></script>
 
 <script>
+
+	// this sets a base, must be outside all functions if we want to add to it at random point
 	var mymap = L.map('mapid').setView([0, 0], 15);
 
-
+	//read file
 	function readSingleFile(e) {
   	var file = e.target.files[0];
+	//calls the xml parser with the xml filepath
 	loadXMLDoc(this)
 	  if (!file) {
 	    return;
 	  }
+
 	  var reader = new FileReader();
 	  reader.onload = function(e) {
 	    var contents = e.target.result;
-		//loadXMLDoc(this);
-		
-
+		//displays the current map location
 		L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
 		maxZoom: 18,
 		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
@@ -110,6 +103,7 @@ body {
 			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
 		id: 'mapbox.streets'
 		}).addTo(mymap);
+		//adds track to map
 		new L.GPX(contents, {async: true}).on('loaded', function(e) {
   		mymap.fitBounds(e.target.getBounds());
 		}).addTo(mymap);
@@ -118,174 +112,210 @@ body {
 	  reader.readAsText(file);
 	}
 
-	function displayContents(contents) {
-	  var element = document.getElementById('file-content');
-	  element.textContent = contents;
-	}
-
 	document.getElementById('file-input')
 	  .addEventListener('change', readSingleFile, false);
 
+
+	//load xml function
 	function loadXMLDoc(xml) {
-    showDiv();
-
-
-	  var xmlhttp = new XMLHttpRequest();
-	  xmlhttp.onreadystatechange = function() {
-	    if (this.readyState == 4 && this.status == 200) {
-	      myFunction(this);
-	    }
-	  };
-	  xmlhttp.open("GET", xml.value.split('\\')[2], true);
-	  xmlhttp.send();
-	}
-
-	function myFunction(xml) {
-	  var total = 0;
-	  var max_cad = 0;
-	  xmlDoc = xml.responseXML;
-	  parent = xmlDoc.getElementsByTagName("trk");
-	  for (i = 0; i< parent.length; i++)
-	  {
-	  	var name = parent[i].childNodes[1].textContent;
-	  	var type = parent[i].childNodes[3].textContent;
-	  	//var elev = parent[i].childNodes[5].childNodes[1].childNodes[1].textContent;
-	  	var date = parent[i].childNodes[5].childNodes[1].childNodes[3].textContent;
-	  	//var hr = parent[i].childNodes[5].childNodes[1].childNodes[5].childNodes[1].childNodes[1].textContent;
-		//var cad = parent[i].childNodes[5].childNodes[1].childNodes[5].childNodes[1].childNodes[3].textContent;
-	        }
-	  document.getElementById("name").innerHTML =  "name: " + name;
-	  document.getElementById("type").innerHTML =  "type: " +type;
-	  //document.getElementById("elev").innerHTML =  "elevation: " +elev;
-	  document.getElementById("date").innerHTML =  "date:" +date;
-	  //document.getElementById("hr").innerHTML   =  "heart rate: " +hr;
-	  //document.getElementById("cad").innerHTML  =  "cadence: " +cad;
-
-	var child = xmlDoc.getElementsByTagName("trkpt");
-
-	var d_list = ""
-	var total_distance = 0
-	var m_or_km = "m"
-	
-	var max_velocity = 0
-	
-	var lats = xmlDoc.getElementsByTagName("trkpt")[0].attributes;
-	var lastlat = lats.getNamedItem("lat").nodeValue + "<br>";
-	lastlat = parseFloat(lastlat);
-		
-	var lons = xmlDoc.getElementsByTagName("trkpt")[0].attributes;
-	var lastlon = lons.getNamedItem("lon").nodeValue + "<br>";
-	lastlon = parseFloat(lastlon);
-
-	var last_time = [00,00,0.00]
-	var time_gap_list = "";
-	var total_time_gap = 0
-
-	var last_time = child[0].childNodes[3].textContent;
-	last_time = last_time.split('T');
-	last_time = last_time[1].split('Z');
-	last_time = last_time[0].split('.');
-	last_time = last_time[0].split(':');
-
-	last_time = (((last_time[0])*3600)+((last_time[1])*60)+((last_time[2]*1)));
-
-
-	for (i = 0; i< child.length; i++)
-	{
-		var lats = xmlDoc.getElementsByTagName("trkpt")[i].attributes;
-		var currentlat = lats.getNamedItem("lat").nodeValue;
-		currentlat = parseFloat(currentlat);
-		
-		var lons = xmlDoc.getElementsByTagName("trkpt")[i].attributes;
-		var currentlon = lons.getNamedItem("lon").nodeValue;
-		currentlon= parseFloat(currentlon);
-
-		var distance = getDistanceFromLatLonInKm(lastlat,lastlon,currentlat,currentlon);
-		d_list += distance + "m" + "<br>"
-		total_distance += distance
-		
-		lastlat = currentlat
-		lastlon = currentlon
-
-		var float = parseFloat(child[i].childNodes[1].textContent);
-		total += float;
-		var cad2 = child[i].childNodes[5].childNodes[1].childNodes[3].textContent;
-		if (cad2 > max_cad){
-			max_cad = cad2;
+	    showDiv();
+		  var xmlhttp = new XMLHttpRequest();
+		  xmlhttp.onreadystatechange = function() {
+		    if (this.readyState == 4 && this.status == 200) {
+		      //pass the file to the parser
+		      myFunction(this);
+		    }
+		  };
+		  xmlhttp.open("GET", xml.value.split('\\')[2], true);
+		  xmlhttp.send();
 		}
-		var current_time = child[i].childNodes[3].textContent;
-		current_time = current_time.split('T');
-		current_time = current_time[1].split('Z');
-		current_time = current_time[0].split('.');
-		current_time = current_time[0].split(':');
+		//parser
+		function myFunction(xml) {
+		  //set max cadence to 0 to compare with later
+		  var max_cad = 0;
 
-		current_time = (((current_time[0])*3600)+((current_time[1])*60)+((current_time[2]*1)));
-		var time_gap = current_time - last_time
-		time_gap_list += time_gap + "<br>";
-		total_time_gap += time_gap;
-		last_time = current_time;
+		  xmlDoc = xml.responseXML;
+		  //getElementsByTagName("trk") returns pretty singular values of these analyticss (I think?.. 
+		  //will probably remove this whole section later BUT using trk is how to get the name, text, time and type
+		  //so its necessary if we want those
+		  parent = xmlDoc.getElementsByTagName("trk");
+		  for (i = 0; i< parent.length; i++)
+		  {
+			//this essentially says, go to the first time you see trk, then go to its first child which is name
+			//[3] does type even though its 1 below name, it seems to jump 2 at a time.
+			//[5] represents trkpt so [1] represents the contents and [3] represents time
+		  	var name = parent[i].childNodes[1].textContent;
+		  	var type = parent[i].childNodes[3].textContent;
+		  	var date = parent[i].childNodes[5].childNodes[1].childNodes[3].textContent;
 
-		current_velocity = distance/time_gap
-		if (current_velocity > max_velocity){
-			max_velocity = current_velocity;
-			max_velocity_lat = currentlat;
-			max_velocity_lon = currentlon;
-		}
-		//var coord = child[0].getNamedItem("lat").nodeValue;
-		//var coord = child.getNamedItem("lat").nodeValue
+			}
+		  document.getElementById("name").innerHTML =  "name: " + name;
+		  document.getElementById("type").innerHTML =  "type: " +type;
+		  document.getElementById("date").innerHTML =  "date:" +date;
+
+		//using trkpt allows for easier looping
+		var child = xmlDoc.getElementsByTagName("trkpt");
 		
+		//set for later use
+		var max_velocity = 0
+		var total_distance = 0
+		var d_list = ""
+		var m_or_km = "m"
+		
+		//select the attributes from the first trkpt (lat & lon)
+		//only used the first trkpt because this will represent the starting position of the route
+		var lats = xmlDoc.getElementsByTagName("trkpt")[0].attributes;
+		//select only latitude
+		var lastlat = lats.getNamedItem("lat").nodeValue + "<br>";
+		//convert to float for numeracy stuff later
+		lastlat = parseFloat(lastlat);
+			
+		// same as above except for longitude
+		var lons = xmlDoc.getElementsByTagName("trkpt")[0].attributes;
+		var lastlon = lons.getNamedItem("lon").nodeValue + "<br>";
+		lastlon = parseFloat(lastlon);
 
-	}
+		//place a marker at the first point (one reason why we made a start position earlier)
+		L.marker([lastlat, lastlon]).addTo(mymap).bindPopup("<b>Start</b><br/>").openPopup();
 
-	average = total/child.length;
-	average_time_gap = total_time_gap/(child.length)
-	average_speed = total_distance/total_time_gap
-	
-	if (total_distance/1000 > 1){
-		total_distance = total_distance/1000
-		m_or_km = "km"
-	}
-	
+		//prep variables for time gap calculation
+		var last_time = [00,00,0.00]
+		var time_gap_list = "";
+		var total_time_gap = 0
+
+		//so get the time from the FIRST trkpt, then remove everything before T, then remove Z, then remove decimal
+		//then remove the : to create list which we can index
+		var last_time = child[0].childNodes[3].textContent;
+		last_time = last_time.split('T');
+		last_time = last_time[1].split('Z');
+		last_time = last_time[0].split('.');
+		last_time = last_time[0].split(':');
+		
+		//convert time to seconds so that we can find the difference between the first time and the second
+		last_time = (((last_time[0])*3600)+((last_time[1])*60)+((last_time[2]*1)));
 
 
-	L.marker([max_velocity_lat, max_velocity_lon]).addTo(mymap)
-		.bindPopup("<b>Max Velocty</b><br />" + max_velocity.toFixed(2)+ " m/s").openPopup();
-	
+		for (i = 0; i< child.length; i++)
+		{
+			//same as before except in a loop so returns every lat and lon
+			var lats = xmlDoc.getElementsByTagName("trkpt")[i].attributes;
+			var currentlat = lats.getNamedItem("lat").nodeValue;
+			currentlat = parseFloat(currentlat);
+			
+			var lons = xmlDoc.getElementsByTagName("trkpt")[i].attributes;
+			var currentlon = lons.getNamedItem("lon").nodeValue;
+			currentlon= parseFloat(currentlon);
 
-	document.getElementById("total").innerHTML =  "total elevation: " + total;
-	document.getElementById("average").innerHTML =  "average elevation: " + average;
-	document.getElementById("max_cad").innerHTML =  "max cadence: " + max_cad;
-	document.getElementById("average_time_gap").innerHTML =  "average time gap: " + average_time_gap + " seconds";
-	//document.getElementById("distance").innerHTML =  "distance gap list: " + d_list;
-	document.getElementById("total_distance").innerHTML =  "total distance: " + total_distance.toFixed(2) + m_or_km;
-	document.getElementById("average_speed").innerHTML =  "average speed: " + average_speed.toFixed(1) + "m/s";
-	document.getElementById("max_velocity").innerHTML =  "max velocity: " + max_velocity.toFixed(2) + "m/s";
+			//calculate distance between last point and current point
+			var distance = getDistanceFromLatLonInKm(lastlat,lastlon,currentlat,currentlon);
+			//a list incase someone wants to see it...
+			d_list += distance + "m" + "<br>"
+			total_distance += distance
 
-	document.getElementById("lat").innerHTML =  "lat: " + max_velocity_lat;
-	document.getElementById("lon").innerHTML =  "lon: " + max_velocity_lon;
+			//set previous to current so loop works
+			lastlat = currentlat	
+			lastlon = currentlon
 
-	}
+			//calculate the max cadence
+			var cad2 = child[i].childNodes[5].childNodes[1].childNodes[3].textContent;
+			if (cad2 > max_cad){
+				max_cad = cad2;
+			}
+			
+			//calculate current time same as first time
+			var current_time = child[i].childNodes[3].textContent;
+			current_time = current_time.split('T');
+			current_time = current_time[1].split('Z');
+			current_time = current_time[0].split('.');
+			current_time = current_time[0].split(':');
 
-	function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
-	  var R = 6371; // Radius of the earth in km
-	  var dLat = deg2rad(lat2-lat1);  // deg2rad below
-	  var dLon = deg2rad(lon2-lon1); 
-	  var a = 
-	    Math.sin(dLat/2) * Math.sin(dLat/2) +
-	    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
-	    Math.sin(dLon/2) * Math.sin(dLon/2)
-	    ; 
-	  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-	  var d = R * c; // Distance in km
-	  return d*1000;
-	}
+			current_time = (((current_time[0])*3600)+((current_time[1])*60)+((current_time[2]*1)));
 
-	function deg2rad(deg) {
-	  return deg * (Math.PI/180)
-	}
-  function showDiv(){
-        document.getElementById('stats').style.display = "block";
-      }
+			//time gap = current - previous time in seconds
+			var time_gap = current_time - last_time
+			time_gap_list += time_gap + "<br>";
+			total_time_gap += time_gap;
+			last_time = current_time;
+
+			//calculate current velocity using distance and time gap made in this loop
+			current_velocity = distance/time_gap
+			
+			//find max velocity over whole loop aswell as the coordinates at which it occured
+			if (current_velocity > max_velocity){
+				max_velocity = current_velocity;
+				max_velocity_lat = currentlat;
+				max_velocity_lon = currentlon;
+			}
+		
+		}
+
+		//finish point
+		L.marker([lastlat, lastlon]).addTo(mymap)
+			.bindPopup("<b>Finish</b><br />").openPopup();
+
+		//average time gap and average speed
+		average_time_gap = total_time_gap/(child.length)
+		average_speed = total_distance/total_time_gap
+		
+		//if the distance is big, divide it by 1000 so that it becomes kilometres and change m to km
+		if (total_distance/1000 > 1){
+			total_distance = total_distance/1000
+			m_or_km = "km"
+		}
+		
+		//place marker for max velocity at appropriate location
+		L.marker([max_velocity_lat, max_velocity_lon]).addTo(mymap)
+			.bindPopup("<b>Max Velocty</b><br />" + max_velocity.toFixed(2)+ " m/s").openPopup();
+		
+		//print statements
+		document.getElementById("max_cad").innerHTML =  "max cadence: " + max_cad;
+		document.getElementById("average_time_gap").innerHTML =  "average time gap: " + average_time_gap + " seconds";
+		//.toFixed returns value to x decimal places
+		document.getElementById("total_distance").innerHTML =  "total distance: " + total_distance.toFixed(2) + m_or_km;
+		document.getElementById("average_speed").innerHTML =  "average speed: " + average_speed.toFixed(1) + "m/s";
+		document.getElementById("max_velocity").innerHTML =  "max velocity: " + max_velocity.toFixed(2) + "m/s";
+
+
+		}
+		//function for calculating distance between points
+		function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+		  var R = 6371; 
+		  var dLat = deg2rad(lat2-lat1); 
+		  var dLon = deg2rad(lon2-lon1); 
+		  var a = 
+		    Math.sin(dLat/2) * Math.sin(dLat/2) +
+		    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+		    Math.sin(dLon/2) * Math.sin(dLon/2)
+		    ; 
+		  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+		  var d = R * c; // Distance in km
+		  return d*1000;
+		}
+
+		function deg2rad(deg) {
+		  return deg * (Math.PI/180)
+		}
+
+	  function showDiv(){
+		document.getElementById('stats').style.display = "block";
+	      }
+
+
+			//things i was too scared to get rid of yet:
+			//--------------------------------------------------------------------------------
+			//document.getElementById("lat").innerHTML =  "lat: " + max_velocity_lat;
+			//document.getElementById("lon").innerHTML =  "lon: " + max_velocity_lon;
+			//var float = parseFloat(child[i].childNodes[1].textContent);
+			//total += float;
+			//average = total/child.length;
+			//document.getElementById("total").innerHTML =  "total elevation: " + total;
+			//document.getElementById("distance").innerHTML =  "distance gap list: " + d_list;
+		  	//var elev = parent[i].childNodes[5].childNodes[1].childNodes[1].textContent;
+		  	//var hr = parent[i].childNodes[5].childNodes[1].childNodes[5].childNodes[1].childNodes[1].textContent;
+			//var cad = parent[i].childNodes[5].childNodes[1].childNodes[5].childNodes[1].childNodes[3].textContent;
+		        //document.getElementById("hr").innerHTML   =  "heart rate: " +hr;
+		        //document.getElementById("cad").innerHTML  =  "cadence: " +cad;
+		        //document.getElementById("elev").innerHTML =  "elevation: " +elev;
 
 </script>
 <p></p>
