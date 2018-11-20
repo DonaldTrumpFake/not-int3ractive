@@ -33,7 +33,7 @@ body {
   border: 10px solid black;
   background-color: #E8A87C ;
   font-family:"Comic Sans";
-  font-size:10px
+  font-size:25px
 }
 .button{
   margin:14px;
@@ -162,8 +162,17 @@ body {
 
 	var child = xmlDoc.getElementsByTagName("trkpt");
 
-	var lat = ""
-	var lon = ""
+	var d_list = ""
+	var total_distance = 0
+	var m_or_km = "m"
+	
+	var lats = xmlDoc.getElementsByTagName("trkpt")[0].attributes;
+	var lastlat = lats.getNamedItem("lat").nodeValue + "<br>";
+	lastlat = parseFloat(lastlat);
+		
+	var lons = xmlDoc.getElementsByTagName("trkpt")[0].attributes;
+	var lastlon = lons.getNamedItem("lon").nodeValue + "<br>";
+	lastlon = parseFloat(lastlon);
 
 	var last_time = [00,00,0.00]
 	var time_gap_list = "";
@@ -181,10 +190,19 @@ body {
 	for (i = 0; i< child.length; i++)
 	{
 		var lats = xmlDoc.getElementsByTagName("trkpt")[i].attributes;
-		lat += lats.getNamedItem("lat").nodeValue + "<br>";
+		var currentlat = lats.getNamedItem("lat").nodeValue;
+		currentlat = parseFloat(currentlat);
 		
 		var lons = xmlDoc.getElementsByTagName("trkpt")[i].attributes;
-		lon += lons.getNamedItem("lon").nodeValue + "<br>";
+		var currentlon = lons.getNamedItem("lon").nodeValue;
+		currentlon= parseFloat(currentlon);
+
+		var distance = getDistanceFromLatLonInKm(lastlat,lastlon,currentlat,currentlon);
+		d_list += distance + "m" + "<br>"
+		total_distance += distance
+		
+		lastlat = currentlat
+		lastlon = currentlon
 
 		var float = parseFloat(child[i].childNodes[1].textContent);
 		total += float;
@@ -212,13 +230,41 @@ body {
 
 	average = total/child.length;
 	average_time_gap = total_time_gap/(child.length)
+	average_speed = total_distance/total_time_gap
+	
+	if (total_distance/1000 > 1){
+		total_distance = total_distance/1000
+		m_or_km = "km"
+	}
+	
 	document.getElementById("total").innerHTML =  "total elevation: " + total;
 	document.getElementById("average").innerHTML =  "average elevation: " + average;
 	document.getElementById("max_cad").innerHTML =  "max cadence: " + max_cad;
 	document.getElementById("average_time_gap").innerHTML =  "average time gap: " + average_time_gap + " seconds";
+	//document.getElementById("distance").innerHTML =  "distance gap list: " + d_list;
+	document.getElementById("total_distance").innerHTML =  "total distance: " + total_distance.toFixed(2) + m_or_km;
+	document.getElementById("average_speed").innerHTML =  "average speed: " + average_speed.toFixed(1) + "m/s";
 	//document.getElementById("lat").innerHTML =  "lat: " + lat;
 	//document.getElementById("lon").innerHTML =  "lon: " + lon;
 
+	}
+
+	function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+	  var R = 6371; // Radius of the earth in km
+	  var dLat = deg2rad(lat2-lat1);  // deg2rad below
+	  var dLon = deg2rad(lon2-lon1); 
+	  var a = 
+	    Math.sin(dLat/2) * Math.sin(dLat/2) +
+	    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+	    Math.sin(dLon/2) * Math.sin(dLon/2)
+	    ; 
+	  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+	  var d = R * c; // Distance in km
+	  return d*1000;
+	}
+
+	function deg2rad(deg) {
+	  return deg * (Math.PI/180)
 	}
   function showDiv(){
         document.getElementById('stats').style.display = "block";
@@ -240,6 +286,9 @@ body {
 <p id="time_gap"></p>
 <p id="time_gap_list"></p>
 <p id="average_time_gap"></p>
+<p id="distance"></p>
+<p id="total_distance"></p>
+<p id="average_speed"></p>
 <p id="lat"></p>
 <p id="lon"></p>
 
