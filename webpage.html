@@ -88,7 +88,7 @@ body {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.4.0/gpx.min.js"></script>
 
 <script>
-
+	var mymap = L.map('mapid').setView([0, 0], 15);
 
 
 	function readSingleFile(e) {
@@ -101,7 +101,7 @@ body {
 	  reader.onload = function(e) {
 	    var contents = e.target.result;
 		//loadXMLDoc(this);
-		var mymap = L.map('mapid').setView([0, 0], 15);
+		
 
 		L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
 		maxZoom: 18,
@@ -113,6 +113,7 @@ body {
 		new L.GPX(contents, {async: true}).on('loaded', function(e) {
   		mymap.fitBounds(e.target.getBounds());
 		}).addTo(mymap);
+		
 	  };
 	  reader.readAsText(file);
 	}
@@ -165,6 +166,8 @@ body {
 	var d_list = ""
 	var total_distance = 0
 	var m_or_km = "m"
+	
+	var max_velocity = 0
 	
 	var lats = xmlDoc.getElementsByTagName("trkpt")[0].attributes;
 	var lastlat = lats.getNamedItem("lat").nodeValue + "<br>";
@@ -222,6 +225,12 @@ body {
 		total_time_gap += time_gap;
 		last_time = current_time;
 
+		current_velocity = distance/time_gap
+		if (current_velocity > max_velocity){
+			max_velocity = current_velocity;
+			max_velocity_lat = currentlat;
+			max_velocity_lon = currentlon;
+		}
 		//var coord = child[0].getNamedItem("lat").nodeValue;
 		//var coord = child.getNamedItem("lat").nodeValue
 		
@@ -237,6 +246,12 @@ body {
 		m_or_km = "km"
 	}
 	
+
+
+	L.marker([max_velocity_lat, max_velocity_lon]).addTo(mymap)
+		.bindPopup("<b>Max Velocty</b><br />" + max_velocity.toFixed(2)+ " m/s").openPopup();
+	
+
 	document.getElementById("total").innerHTML =  "total elevation: " + total;
 	document.getElementById("average").innerHTML =  "average elevation: " + average;
 	document.getElementById("max_cad").innerHTML =  "max cadence: " + max_cad;
@@ -244,8 +259,10 @@ body {
 	//document.getElementById("distance").innerHTML =  "distance gap list: " + d_list;
 	document.getElementById("total_distance").innerHTML =  "total distance: " + total_distance.toFixed(2) + m_or_km;
 	document.getElementById("average_speed").innerHTML =  "average speed: " + average_speed.toFixed(1) + "m/s";
-	//document.getElementById("lat").innerHTML =  "lat: " + lat;
-	//document.getElementById("lon").innerHTML =  "lon: " + lon;
+	document.getElementById("max_velocity").innerHTML =  "max velocity: " + max_velocity.toFixed(2) + "m/s";
+
+	document.getElementById("lat").innerHTML =  "lat: " + max_velocity_lat;
+	document.getElementById("lon").innerHTML =  "lon: " + max_velocity_lon;
 
 	}
 
@@ -289,6 +306,7 @@ body {
 <p id="distance"></p>
 <p id="total_distance"></p>
 <p id="average_speed"></p>
+<p id="max_velocity"></p>
 <p id="lat"></p>
 <p id="lon"></p>
 
