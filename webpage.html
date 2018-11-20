@@ -4,6 +4,9 @@
 <title>Timthraill</title>
 
 <style>
+body {
+  background-color: #E27D60
+}
 .centermap {
     margin: auto;
     width: 60%;
@@ -16,30 +19,68 @@
     margin-right: 0;
     margin-left: 0;
     border: 10px solid black ;
-    background-color: lightgrey ;
+    background-color: #E8A87C ;
     font-family: "Arial", Sans-serif;
     font-size: 100px;
 }
+
+.statistics {
+
+  display:none;
+  padding:10px;
+  margin:auto;
+  width:60%;
+  border: 10px solid black;
+  background-color: #E8A87C ;
+  font-family:"Comic Sans";
+  font-size:10px
+}
+.button{
+  margin:14px;
+  top:0px;
+  margin-left:-140px;
+}
+
+#file-input{
+  margin: 10px;
+
+}
+/* .label{
+  background-color: #7F0CCB;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px ridge black;
+  font-size: 0.8rem;
+  height: auto; */
+
+}
+
+#input-label{
+  margin-left: -100px;
+  color:blue;
+
+}
+
 </style>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js" integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA==" crossorigin=""></script>
 
-
-	
 </head>
+
 <body>
 
+  <!-- <label for="image_uploads">Choose images to upload (PNG, JPG)</label>
+      <input type="file" id="image_uploads" name="image_uploads" accept=".jpg, .jpeg, .png" multiple> -->
 
 
 
 <h1 class = header style="text-align:center;">Timthraill</h1>
-
-<label for="avatar">Choose file</label>
-
-<input type="file" id="file-input" />
-<h3>Contents of the file:</h3>
-<pre id="file-content"></pre>
+<label for="avatar" id = "input-label" > Upload file: </label>
+<p id="input-label">
+</p>
+<p></p>
+<input type="file" id="file-input" size="60"/>
 
 <div class = centermap id="mapid" style="width: 800px; height: 500px ;"></div>
 
@@ -48,15 +89,30 @@
 
 <script>
 
+
+var mymap = L.map('mapid').setView([55.941530037671328, -4.317962815985084], 15);
+
+	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+		maxZoom: 18,
+		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+			'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+		id: 'mapbox.streets'
+	}).addTo(mymap);
+
 	function readSingleFile(e) {
   	var file = e.target.files[0];
+	loadXMLDoc(this)
 	  if (!file) {
 	    return;
 	  }
 	  var reader = new FileReader();
 	  reader.onload = function(e) {
 	    var contents = e.target.result;
-	    displayContents(contents);
+		//loadXMLDoc(this);
+		new L.GPX(contents, {async: true}).on('loaded', function(e) {
+  		map.fitBounds(e.target.getBounds());
+		}).addTo(mymap);
 	  };
 	  reader.readAsText(file);
 	}
@@ -69,24 +125,105 @@
 	document.getElementById('file-input')
 	  .addEventListener('change', readSingleFile, false);
 
-	var mymap = L.map('mapid').setView([55.941530037671328, -4.317962815985084], 15);
-	
-	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-		maxZoom: 18,
-		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-			'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-		id: 'mapbox.streets'
-	}).addTo(mymap);
+	function loadXMLDoc(xml) {
+    showDiv();
 
-		
-	var gpx = '1.gpx';
-		new L.GPX(gpx, {async: true}).on('loaded', function(e) {
-  		map.fitBounds(e.target.getBounds());	
-	}).addTo(mymap);
+	  var xmlhttp = new XMLHttpRequest();
+	  xmlhttp.onreadystatechange = function() {
+	    if (this.readyState == 4 && this.status == 200) {
+	      myFunction(this);
+	    }
+	  };
+	  xmlhttp.open("GET", xml.value.split('\\')[2], true);
+	  xmlhttp.send();
+	}
+
+	function myFunction(xml) {
+	  var total = 0;
+	  var max_cad = 0;
+	  xmlDoc = xml.responseXML;
+	  parent = xmlDoc.getElementsByTagName("trk");
+	  for (i = 0; i< parent.length; i++)
+	  {
+	  	var name = parent[i].childNodes[1].textContent;
+	  	var type = parent[i].childNodes[3].textContent;
+	  	//var elev = parent[i].childNodes[5].childNodes[1].childNodes[1].textContent;
+	  	var date = parent[i].childNodes[5].childNodes[1].childNodes[3].textContent;
+	  	//var hr = parent[i].childNodes[5].childNodes[1].childNodes[5].childNodes[1].childNodes[1].textContent;
+		//var cad = parent[i].childNodes[5].childNodes[1].childNodes[5].childNodes[1].childNodes[3].textContent;
+	        }
+	  document.getElementById("name").innerHTML =  "name: " + name;
+	  document.getElementById("type").innerHTML =  "type: " +type;
+	  //document.getElementById("elev").innerHTML =  "elevation: " +elev;
+	  document.getElementById("date").innerHTML =  "date:" +date;
+	  //document.getElementById("hr").innerHTML   =  "heart rate: " +hr;
+	  //document.getElementById("cad").innerHTML  =  "cadence: " +cad;
+
+	child = xmlDoc.getElementsByTagName("trkpt");
+
+	var last_time = [00,00,0.00]
+	var time_gap_list = "";
+	var total_time_gap = 0
+
+	var last_time = child[0].childNodes[3].textContent;
+	last_time = last_time.split('T');
+	last_time = last_time[1].split('Z');
+	last_time = last_time[0].split('.');
+	last_time = last_time[0].split(':');
+
+	last_time = (((last_time[0])*3600)+((last_time[1])*60)+((last_time[2]*1)));
+
+
+	for (i = 0; i< child.length; i++)
+	{
+		var float = parseFloat(child[i].childNodes[1].textContent);
+		total += float;
+		var cad2 = child[i].childNodes[5].childNodes[1].childNodes[3].textContent;
+		if (cad2 > max_cad){
+			max_cad = cad2;
+		}
+		var current_time = child[i].childNodes[3].textContent;
+		current_time = current_time.split('T');
+		current_time = current_time[1].split('Z');
+		current_time = current_time[0].split('.');
+		current_time = current_time[0].split(':');
+
+		current_time = (((current_time[0])*3600)+((current_time[1])*60)+((current_time[2]*1)));
+		var time_gap = current_time - last_time
+		time_gap_list += time_gap + "<br>";
+		total_time_gap += time_gap;
+		last_time = current_time;
+
+	}
+	average = total/child.length;
+	average_time_gap = total_time_gap/(child.length)
+	document.getElementById("total").innerHTML =  "total elevation: " + total;
+	document.getElementById("average").innerHTML =  "average elevation: " + average;
+	document.getElementById("max_cad").innerHTML =  "max cadence: " + max_cad;
+	document.getElementById("average_time_gap").innerHTML =  "average time gap: " + average_time_gap + "milliseconds";
+	//document.getElementById("time_gap_list").innerHTML =  "last_time: " + time_gap_list;
+
+	}
+  function showDiv(){
+        document.getElementById('stats').style.display = "block";
+      }
 
 </script>
+<p></p>
+<div class = statistics id="stats">
+<h4> Statistics </h4>
+<p id="name"></p>
+<p id="type"></p>
+<p id="elev"></p>
+<p id="date"></p>
+<p id="hr"></p>
+<p id="cad"></p>
+<p id="total"></p>
+<p id="average"></p>
+<p id="max_cad"></p>
+<p id="time_gap"></p>
+<p id="time_gap_list"></p>
 
+</div>
 </body>
 </html>
-
