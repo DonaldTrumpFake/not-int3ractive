@@ -163,12 +163,7 @@ body {
 	var child = xmlDoc.getElementsByTagName("trkpt");
 
 	var lat = ""
-
-	var lats=xmlDoc.getElementsByTagName("trkpt")[0].attributes;
-	//var lat = (lats.getNamedItem("lat").nodeValue);
-
-	//var lons=xmlDoc.getElementsByTagName("trkpt")[0].attributes;
-	//var lon = (lons.getNamedItem("lon").nodeValue);
+	var lon = ""
 
 	var last_time = [00,00,0.00]
 	var time_gap_list = "";
@@ -185,8 +180,11 @@ body {
 
 	for (i = 0; i< child.length; i++)
 	{
+		var lats = xmlDoc.getElementsByTagName("trkpt")[i].attributes;
+		lat += lats.getNamedItem("lat").nodeValue + "<br>";
 		
-		lat = lats.getNamedItem("lat").nodeValue + "<br>";
+		var lons = xmlDoc.getElementsByTagName("trkpt")[i].attributes;
+		lon += lons.getNamedItem("lon").nodeValue + "<br>";
 
 		var float = parseFloat(child[i].childNodes[1].textContent);
 		total += float;
@@ -218,7 +216,7 @@ body {
 	document.getElementById("average").innerHTML =  "average elevation: " + average;
 	document.getElementById("max_cad").innerHTML =  "max cadence: " + max_cad;
 	document.getElementById("average_time_gap").innerHTML =  "average time gap: " + average_time_gap + " seconds";
-	document.getElementById("lat").innerHTML =  "lat: " + lat;
+	//document.getElementById("lat").innerHTML =  "lat: " + lat;
 	//document.getElementById("lon").innerHTML =  "lon: " + lon;
 
 	}
