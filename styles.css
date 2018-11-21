@@ -1,0 +1,122 @@
+#inline{
+  display:flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+
+}
+body {
+  background-color: black;
+}
+.centermap {
+    margin: auto;
+    width: 80%;
+    border: 10px solid grey;
+    padding: 50px;
+}
+.header {
+    right: 0;
+    left: 0;
+    margin-right: 0;
+    margin-left: 0;
+    border: 10px solid grey ;
+    background-color: black ;
+    font-family: "Arial", Sans-serif;
+    font-size: 100px;
+    color: white;
+}
+.header2{
+    display:none;
+    width: auto;
+    margin:10px;
+    border: 10px solid grey ;
+    background-color: black ;
+    font-family: "Comic Sans";
+    font-size: 20px;
+    text-align:center;
+    color: white;
+}
+.statistics {
+  float:left;
+  height: 300px;
+  display:none;
+  padding:20px;
+  margin:10px;
+  width: auto;
+  border: 10px solid grey;
+  background-color: black ;
+  font-family:"Comic Sans";
+  font-size:15px;
+  text-align:center;
+  color: white;
+}
+.onmap {
+  height: 300px;
+  display:none;
+  float: left;
+  padding:20px;
+  margin:10px;
+  width:auto;
+  border: 10px solid grey;
+  background-color: black ;
+  font-family:"Comic Sans";
+  font-size:15px;
+  color: white;
+  text-align:center;
+}
+.facts {
+  height: 300px;
+  display:none;
+  float: left;
+  padding:20px;
+  margin:10px;
+  width:auto;
+  border: 10px solid grey;
+  background-color: black ;
+  font-family:"Comic Sans";
+  font-size:15px;
+  text-align:center;
+  color: white;
+}
+.button{
+  margin:5px;
+  top:5px;
+  margin-left:10px;
+  background-color: black;
+  width: 80%;
+  color: white;
+}
+.hidden{
+  display:none;
+}
+.browse{
+  float:center;
+  margin:auto;
+  margin-bottom: 10px;
+  background-color: black;
+  width: 200px;
+  border: 5px solid grey;
+  font-size:30px;
+  text-align:center;
+  color: white;
+}
+
+#file-input{
+  margin: 10px;
+
+}
+/* .label{
+  background-color: #7F0CCB;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px ridge black;
+  font-size: 0.8rem;
+  height: auto; */
+
+}
+
+#input-label{
+  margin-left: -100px;
+  color:blue;
+
+}
