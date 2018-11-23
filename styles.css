@@ -6,12 +6,12 @@
 
 }
 body {
-  background-color: black;
+  background-color: white;
 }
 .centermap {
     margin: auto;
     width: 80%;
-    border: 10px solid grey;
+    border: 10px #415a77;
     padding: 50px;
 }
 .header {
@@ -19,8 +19,8 @@ body {
     left: 0;
     margin-right: 0;
     margin-left: 0;
-    border: 10px solid grey ;
-    background-color: black ;
+    border: 10px #415a77 ;
+    background-color: #778da9 ;
     font-family: "Arial", Sans-serif;
     font-size: 100px;
     color: white;
@@ -29,8 +29,9 @@ body {
     display:none;
     width: auto;
     margin:10px;
-    border: 10px solid grey ;
-    background-color: black ;
+    padding:10px;
+    border: 10px #415a77 ;
+    background-color: #778da9 ;
     font-family: "Comic Sans";
     font-size: 20px;
     text-align:center;
@@ -43,8 +44,8 @@ body {
   padding:20px;
   margin:10px;
   width: auto;
-  border: 10px solid grey;
-  background-color: black ;
+  border: 10px #415a77;
+  background-color: #778da9 ;
   font-family:"Comic Sans";
   font-size:15px;
   text-align:center;
@@ -57,8 +58,8 @@ body {
   padding:20px;
   margin:10px;
   width:auto;
-  border: 10px solid grey;
-  background-color: black ;
+  border: 10px #415a77;
+  background-color: #778da9 ;
   font-family:"Comic Sans";
   font-size:15px;
   color: white;
@@ -71,8 +72,8 @@ body {
   padding:20px;
   margin:10px;
   width:auto;
-  border: 10px solid grey;
-  background-color: black ;
+  border: 10px #415a77;
+  background-color: #778da9 ;
   font-family:"Comic Sans";
   font-size:15px;
   text-align:center;
@@ -82,7 +83,7 @@ body {
   margin:5px;
   top:5px;
   margin-left:10px;
-  background-color: black;
+  background-color: #778da9;
   width: 80%;
   color: white;
 }
@@ -93,9 +94,9 @@ body {
   float:center;
   margin:auto;
   margin-bottom: 10px;
-  background-color: black;
+  background-color: #778da9;
   width: 200px;
-  border: 5px solid grey;
+  border: 5px #415a77;
   font-size:30px;
   text-align:center;
   color: white;
