@@ -15,16 +15,7 @@
 	<h1 class = header style="text-align:center;">Timthraill</h1>
 	<input type="file" class="hidden" id="file-input"  size="60"/>
 	<div class="browse" id="uploadTrigger">Select File</div>
-	<div class = centermap id="mapid" style="width: 800px; height: 500px ;"></div>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.4.0/gpx.min.js"></script>
-	<script src="script.js"></script>
-        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
-<div class = header2 id="header2">
-<p id="name"></p>
-</div>
 
 
 
@@ -50,12 +41,7 @@
 	<p id="lon"></p>
 	</div>
 
-	<div class = onmap id="onmap">
-	<h4> Display On Map </h4>
-	<button onclick="max_velocity_fn()" type="button" class = button>Max Velocity</button> 
-	<button onclick="max_heartrate_fn()" type="button" class = button>Max Heart Rate</button> 
-	<button onclick="max_elevation_fn()" type="button" class = button>Max elevation</button> 
-	</div>
+	<div class = centermap id="mapid" style="width: 800px; height: 500px ;"></div>
 
 	<div class = facts id="facts">
 	<h4> Some Fun Facts </h4>
@@ -63,8 +49,25 @@
 	<p id="fun_velocity"></p>
 	<p id="fun_heartrate"></p>
 	</div>
+
+
+</div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.4.0/gpx.min.js"></script>
+	<script src="script.js"></script>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<div class = header2 id="header2">
+<p id="name"></p>
 </div>
 
+<div class = onmap id="onmap">
+<h4> Display On Map </h4>
+<button onclick="max_velocity_fn()" type="button" class = button>Max Velocity</button> 
+<button onclick="max_heartrate_fn()" type="button" class = button>Max Heart Rate</button> 
+<button onclick="max_elevation_fn()" type="button" class = button>Max elevation</button> 
+</div>
 
 
 </body>

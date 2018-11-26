@@ -10,9 +10,9 @@ body {
 }
 .centermap {
     margin: auto;
-    width: 80%;
-    border: 10px #415a77;
-    padding: 50px;
+    width: 90%;
+    border: 0px #415a77;
+    padding: 10px;
 }
 .header {
     right: 0;
@@ -28,8 +28,9 @@ body {
 .header2{
     display:none;
     width: auto;
-    margin:10px;
+    margin:0px;
     padding:10px;
+    padding-bottom:5px;
     border: 10px #415a77 ;
     background-color: #778da9 ;
     font-family: "Comic Sans";
@@ -39,11 +40,11 @@ body {
 }
 .statistics {
   float:left;
-  height: 300px;
+  height: 480px;
   display:none;
   padding:20px;
-  margin:10px;
-  width: auto;
+  margin:0px;
+  width:20%;
   border: 10px #415a77;
   background-color: #778da9 ;
   font-family:"Comic Sans";
@@ -52,13 +53,14 @@ body {
   color: white;
 }
 .onmap {
-  height: 300px;
+  height: 50px;
   display:none;
   float: left;
-  padding:20px;
-  margin:10px;
-  width:auto;
-  border: 10px #415a77;
+  padding:5px;
+  padding-bottom:50px;
+  margin:0px;
+  width:100%;
+  border: 0px #415a77;
   background-color: #778da9 ;
   font-family:"Comic Sans";
   font-size:15px;
@@ -66,12 +68,12 @@ body {
   text-align:center;
 }
 .facts {
-  height: 300px;
+  height: 480px;
   display:none;
   float: left;
   padding:20px;
-  margin:10px;
-  width:auto;
+  margin:0px;
+  width:20%;
   border: 10px #415a77;
   background-color: #778da9 ;
   font-family:"Comic Sans";
@@ -84,7 +86,7 @@ body {
   top:5px;
   margin-left:10px;
   background-color: #778da9;
-  width: 80%;
+  width: 20%;
   color: white;
 }
 .hidden{
@@ -93,10 +95,10 @@ body {
 .browse{
   float:center;
   margin:auto;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
   background-color: #778da9;
-  width: 200px;
-  border: 5px #415a77;
+  width: 100%;
+  border: 0px #415a77;
   font-size:30px;
   text-align:center;
   color: white;
