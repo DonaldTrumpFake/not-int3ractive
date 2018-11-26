@@ -6,44 +6,32 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js" integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA==" crossorigin=""></script>
     <link rel="stylesheet" href="styles.css" />
+	<script src='https://code.responsivevoice.org/responsivevoice.js'></script>
 
 </head>
-  
 
 
 <body>
-	<h1 class = header style="text-align:center;">Timthraill</h1>
+	<h1 class = header style="text-align:center;" input onclick='responsiveVoice.speak("Timthraill");' type='button'>Timthraill</h1>
 	<input type="file" class="hidden" id="file-input"  size="60"/>
-	<div class="browse" id="uploadTrigger">Select File</div>
-
-
-
+	<div class="browse" id="uploadTrigger" input onclick='responsiveVoice.speak("Select a file");' type='button'>Select File</div>
 
 <div id="inline">
-	<div class = statistics id="stats">
+	<div class = statistics id="stats" onclick='responsiveVoice.speak("Statistics." + document.getElementById("max_cad").innerHTML + "." + document.getElementById("average_time_gap").innerHTML + "." + document.getElementById("total_distance").innerHTML + "." + document.getElementById("average_speed").innerHTML + ", " + document.getElementById("max_velocity").innerHTML + ", " + document.getElementById("max_heartrate").innerHTML + ", " + document.getElementById("total_climbed").innerHTML);' type='button'>
+	
 	<h4> Statistics </h4>
-	<p id="elev"></p>
-	<p id="hr"></p>
-	<p id="cad"></p>
-	<p id="total"></p>
-	<p id="average"></p>
 	<p id="max_cad"></p>
-	<p id="time_gap"></p>
-	<p id="time_gap_list"></p>
 	<p id="average_time_gap"></p>
-	<p id="distance"></p>
 	<p id="total_distance"></p>
 	<p id="average_speed"></p>
 	<p id="max_velocity"></p>
 	<p id="max_heartrate"></p>
 	<p id="total_climbed"></p>
-	<p id="lat"></p>
-	<p id="lon"></p>
 	</div>
 
-	<div class = centermap id="mapid" style="width: 800px; height: 500px ;"></div>
+	<div class = centermap id="mapid" input onclick='responsiveVoice.speak("This is the map of " + document.getElementById("name_only").innerHTML);' type='button' ></div>
 
-	<div class = facts id="facts">
+	<div class = facts id="facts" input onclick='responsiveVoice.speak("Some fun facts." + document.getElementById("fun_elevation").innerHTML + ", " + document.getElementById("fun_velocity").innerHTML + ", " + document.getElementById("fun_heartrate").innerHTML);' type='button'>
 	<h4> Some Fun Facts </h4>
 	<p id="fun_elevation"></p>
 	<p id="fun_velocity"></p>
@@ -58,15 +46,20 @@
 	<script src="script.js"></script>
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
-<div class = header2 id="header2">
+<div class = header2 id="header2" input onclick='responsiveVoice.speak(document.getElementById("name").innerHTML);' type='button'>
 <p id="name"></p>
 </div>
 
 <div class = onmap id="onmap">
 <h4> Display On Map </h4>
-<button onclick="max_velocity_fn()" type="button" class = button>Max Velocity</button> 
-<button onclick="max_heartrate_fn()" type="button" class = button>Max Heart Rate</button> 
-<button onclick="max_elevation_fn()" type="button" class = button>Max elevation</button> 
+<button class = button onclick= "max_velocity_fn()" >Max Velocity</button> 
+<button class = button onclick= "max_heartrate_fn()" >Max Heart Rate</button> 
+<button class = button onclick= "max_elevation_fn()">Max elevation</button> 
+</div>
+
+
+<div class = header3 id="header3">
+<p id="name_only"></p>
 </div>
 
 
