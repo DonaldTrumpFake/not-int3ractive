@@ -10,10 +10,9 @@ body {
 }
 .centermap {
     margin: auto;
+    width: 90%;
     border: 0px #415a77;
     padding: 10px;
-	width: 80%;
-	height: 500px;
 }
 .header {
     right: 0;
@@ -38,9 +37,6 @@ body {
     font-size: 20px;
     text-align:center;
     color: white;
-}
-.header3{
-    display:none;
 }
 .statistics {
   float:left;

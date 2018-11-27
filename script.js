@@ -9,8 +9,6 @@ var velocity_coord  = 0
 var heartrate_coord = 0
 var elevation_coord = 0
 
-
-
 //read file
 function readSingleFile(e) {
 var file = e.target.files[0];
@@ -42,6 +40,7 @@ loadXMLDoc(this)
 
 document.getElementById('file-input')
   .addEventListener('change', readSingleFile, false);
+
 
 //load xml function
 function loadXMLDoc(xml) {
@@ -78,7 +77,6 @@ function loadXMLDoc(xml) {
 		date = date[0];
 
 		}
-	  document.getElementById("name_only").innerHTML = name;
 	  document.getElementById("name").innerHTML =  "Name : " + name + " |   Type : " +type +" |   Date :" +date;
 
 	//using trkpt allows for easier looping
@@ -124,7 +122,6 @@ function loadXMLDoc(xml) {
 	last_time = last_time[0].split('.');
 	last_time = last_time[0].split(':');
 	
-	var elevation_list = [];
 	//convert time to seconds so that we can find the difference between the first time and the second
 	last_time = (((last_time[0])*3600)+((last_time[1])*60)+((last_time[2]*1)));
 
@@ -182,12 +179,10 @@ function loadXMLDoc(xml) {
 			max_velocity_lat = currentlat;
 			max_velocity_lon = currentlon;
 		}
-		 
 		if (current_elevation > max_elevation){
 			max_elevation = current_elevation;
 			max_elevation_lat = currentlat;
 			max_elevation_lon = currentlon;
-			elevation_list += current_elevation;
 		}
 		if (current_heartrate> max_heartrate){
 			max_heartrate = current_heartrate;
@@ -281,9 +276,8 @@ function loadXMLDoc(xml) {
 		.bindPopup("<b>Max Elevation</b><br />" + max_elevation.toFixed(2)+ "m").openPopup();
 	
 	//print statements
-	document.getElementById("max_cad").innerHTML =  "max cadence: " + max_cad 
-	document.getElementById("average_time_gap").innerHTML =  "average time gap: " + average_time_gap.toFixed(1) + " seconds"
-	;
+	document.getElementById("max_cad").innerHTML =  "max cadence: " + max_cad;
+	document.getElementById("average_time_gap").innerHTML =  "average time gap: " + average_time_gap.toFixed(1) + " seconds";
 	//.toFixed returns value to x decimal places
 	document.getElementById("total_distance").innerHTML =  "total distance: " + total_distance.toFixed(2) + m_or_km;
 	document.getElementById("average_speed").innerHTML =  "average velocity: " + average_speed.toFixed(1) + "m/s";
@@ -335,7 +329,6 @@ function loadXMLDoc(xml) {
 	  heartrate_coord.remove(mymap)
 	  elevation_coord.addTo(mymap)
 	}
-	
 
 
 
