@@ -9,7 +9,7 @@ var velocity_coord  = 0
 var heartrate_coord = 0
 var elevation_coord = 0
 
-//read file
+///read file
 function readSingleFile(e) {
 var file = e.target.files[0];
 //calls the xml parser with the xml filepath
@@ -41,10 +41,8 @@ loadXMLDoc(this)
 document.getElementById('file-input')
   .addEventListener('change', readSingleFile, false);
 
-
 //load xml function
 function loadXMLDoc(xml) {
-    showDiv();
 	  var xmlhttp = new XMLHttpRequest();
 	  xmlhttp.onreadystatechange = function() {
 	    if (this.readyState == 4 && this.status == 200) {
@@ -61,10 +59,16 @@ function loadXMLDoc(xml) {
 	  var max_cad = 0;
 
 	  xmlDoc = xml.responseXML;
+	   if(xmlDoc==null){
+		dontshowDiv();
+		return;
+		}
+	   showDiv();
 	  //getElementsByTagName("trk") returns pretty singular values of these analyticss (I think?.. 
 	  //will probably remove this whole section later BUT using trk is how to get the name, text, time and type
 	  //so its necessary if we want those
 	  parent = xmlDoc.getElementsByTagName("trk");
+
 	  for (i = 0; i< parent.length; i++)
 	  {
 		//this essentially says, go to the first time you see trk, then go to its first child which is name
@@ -78,6 +82,7 @@ function loadXMLDoc(xml) {
 
 		}
 	  document.getElementById("name").innerHTML =  "Name : " + name + " |   Type : " +type +" |   Date :" +date;
+	  document.getElementById("name_only").innerHTML = name;
 
 	//using trkpt allows for easier looping
 	var child = xmlDoc.getElementsByTagName("trkpt");
@@ -91,11 +96,19 @@ function loadXMLDoc(xml) {
 	var m_or_km = "m"
 	var total_elevation = 0
 	var previous_elevation = 0
+	var total_heartrate = 0
 	previous_elevation = parseFloat(child[0].childNodes[1].textContent);
-	
+
+	var hr_list = []
+	var elev_list = []
+	var vel_list = []
 	//select the attributes from the first trkpt (lat & lon)
 	//only used the first trkpt because this will represent the starting position of the route
 	var lats = xmlDoc.getElementsByTagName("trkpt")[0].attributes;
+	if(lats==null){
+		alert("missing lattitude");
+		return;
+	}
 	//select only latitude
 	var lastlat = lats.getNamedItem("lat").nodeValue + "<br>";
 	//convert to float for numeracy stuff later
@@ -122,6 +135,7 @@ function loadXMLDoc(xml) {
 	last_time = last_time[0].split('.');
 	last_time = last_time[0].split(':');
 	
+	var elevation_list = [];
 	//convert time to seconds so that we can find the difference between the first time and the second
 	last_time = (((last_time[0])*3600)+((last_time[1])*60)+((last_time[2]*1)));
 
@@ -170,8 +184,13 @@ function loadXMLDoc(xml) {
 
 		//calculate current velocity using distance and time gap made in this loop
 		current_velocity = distance/time_gap
+		vel_list.push(current_velocity);
 		current_elevation = parseFloat(child[i].childNodes[1].textContent);
+		elev_list.push(current_elevation);
 		current_heartrate = parseFloat(child[i].childNodes[5].childNodes[1].childNodes[1].textContent);
+		hr_list.push(current_heartrate);
+
+		total_heartrate = total_heartrate + current_heartrate;
 		
 		//find max velocity over whole loop aswell as the coordinates at which it occured
 		if (current_velocity > max_velocity){
@@ -179,10 +198,12 @@ function loadXMLDoc(xml) {
 			max_velocity_lat = currentlat;
 			max_velocity_lon = currentlon;
 		}
+		 
 		if (current_elevation > max_elevation){
 			max_elevation = current_elevation;
 			max_elevation_lat = currentlat;
 			max_elevation_lon = currentlon;
+			elevation_list += current_elevation;
 		}
 		if (current_heartrate> max_heartrate){
 			max_heartrate = current_heartrate;
@@ -193,8 +214,56 @@ function loadXMLDoc(xml) {
 			total_elevation += (current_elevation - previous_elevation)
 		}
 		previous_elevation = current_elevation
+
 	
 	}
+
+		Chart.defaults.global.defaultFontColor = "white";
+		var ctx = document.getElementById('myChart').getContext('2d');
+		var chart = new Chart(ctx, {
+		    // The type of chart we want to create
+		    type: 'line',
+
+		    // The data for our dataset
+		    data: {
+			labels: elev_list,
+			datasets: [{
+			    label: "heartrate against elevation",
+			    backgroundColor: '#415a77',
+			    borderColor: 'white',
+			    data: hr_list,
+			}]
+		    },
+
+		    // Configuration options go here
+		    options: {
+		        elements: {
+		            point:{
+		                radius: 0
+		            }
+		        },
+			legend: {
+			    labels: {
+				fontColor: 'white'
+			    }
+			},
+			scales: {
+				xAxes: [{
+				    ticks: {
+					autoSkip: true,
+					maxTicksLimit: 20
+				    }
+				}]
+
+
+		   	 }
+
+			}
+			                                        
+		});
+	
+
+	average_heartrate = total_heartrate/(child.length);
 
 	//fun facts
 	var fun_elevation = ""
@@ -223,11 +292,21 @@ function loadXMLDoc(xml) {
 		fun_velocity  = "a crocodile in water (2 m/s)";
 	}if (2 <= max_velocity && max_velocity < 4){
 		fun_velocity  = "a fast paced pedestrian (3 m/s)";
-	}if (4 <= max_velocity && max_velocity < 6){
-		fun_velocity  = "a Bull (6.3 m/s)";
-	}if (6 <= max_velocity && max_velocity < 10){
+	}if (4 <= max_velocity && max_velocity < 5){
+		fun_velocity  = "a chicken (4.0 m/s)";
+	}if (5 <= max_velocity && max_velocity < 6){
+		fun_velocity  = "a squirrel (5.4 m/s";
+	}if (6 <= max_velocity && max_velocity < 7.5){
+		fun_velocity  = "a Six-lined race runner (7.4 m/s)";
+	}if (7.5 <= max_velocity && max_velocity < 9){
+		fun_velocity  = "a Black Mamba snake (8.9 m/s)";
+	}if (9 <= max_velocity && max_velocity < 11){
 		fun_velocity  = "Usain Bolt (10 m/s)";
-	}if (10 <= max_velocity && max_velocity < 20){
+	}if (10 <= max_velocity && max_velocity < 13){
+		fun_velocity  = "an Elephant (12 m/s)";
+	}if (13 <= max_velocity && max_velocity < 16){
+		fun_velocity  = "a domestic cat (13.5 m/s)";
+	}if (16 <= max_velocity && max_velocity < 20){
 		fun_velocity  = "a Gazelle (20 m/s)";
 	}if (20<= max_velocity && max_velocity < 26){
 		fun_velocity  = "'traveling a mile a minute' (26 m/s) ";
@@ -235,22 +314,40 @@ function loadXMLDoc(xml) {
 		fun_velocity  = "a skydiver falling belly to earth(53 m/s)";
 	}
 
-	var fun_heartrate = ""
-	if (0 <= max_heartrate && max_heartrate < 60){
-		fun_heartrate  = "a human, not doing much (60 bpm)";
-	}if (60 <= max_heartrate && max_heartrate < 100){
-		fun_heartrate  = "a small dog(100 bpm)";
-	}if (100 <= max_heartrate && max_heartrate < 150){
-		fun_heartrate  = "a cat (150 bpm)";
-	}if (150 <= max_heartrate && max_heartrate < 175){
-		fun_heartrate  = "a reasonable heart rate for an exercising human (150-220 bpm)";
-	}if (175 <= max_heartrate && max_heartrate < 200){
-		fun_heartrate  = "a monkey (190 bpm)";
-	}if (200 <= max_heartrate && max_heartrate < 250){
-		fun_heartrate  = "a rabbit (205 m/s)";
-	}if (250<= max_heartrate && max_heartrate < 300){
-		fun_heartrate  = " a chicken (275 bpm), but more importantly, consult your GP ";
+	var fun_averageheartrate = ""
+	if (0 <= average_heartrate && average_heartrate < 60){
+		fun_averageheartrate  = "a human, not doing much (60 bpm)";
+	}if (60 <= average_heartrate && average_heartrate < 100){
+		fun_averageheartrate  = "a small dog(100 bpm)";
+	}if (100 <= average_heartrate && average_heartrate < 150){
+		fun_averageheartrate  = "a cat (150 bpm)";
+	}if (150 <= average_heartrate && average_heartrate < 175){
+		fun_averageheartrate  = "a reasonable heart rate for an exercising human (150-220 bpm)";
+	}if (175 <= average_heartrate && average_heartrate < 200){
+		fun_averageheartrate  = "a monkey (190 bpm)";
+	}if (200 <= average_heartrate && average_heartrate < 250){
+		fun_averageheartrate  = "a rabbit (205 m/s)";
+	}if (250<= average_heartrate && average_heartrate < 300){
+		fun_averageheartrate  = " a chicken (275 bpm), but more importantly, consult your GP ";
 	}
+
+	var fun_maxheartrate = ""
+	if (0 <= max_heartrate && max_heartrate < 60){
+		fun_maxheartrate  = "a human, not doing much (60 bpm)";
+	}if (60 <= max_heartrate && max_heartrate < 100){
+		fun_maxheartrate  = "a small dog(100 bpm)";
+	}if (100 <= max_heartrate && max_heartrate < 150){
+		fun_maxheartrate  = "a cat (150 bpm)";
+	}if (150 <= max_heartrate && max_heartrate < 175){
+		fun_maxheartrate  = "a reasonable heart rate for an exercising human (150-220 bpm)";
+	}if (175 <= max_heartrate && max_heartrate < 200){
+		fun_maxheartrate  = "a monkey (190 bpm)";
+	}if (200 <= max_heartrate && max_heartrate < 250){
+		fun_maxheartrate  = "a rabbit (205 m/s)";
+	}if (250<= max_heartrate && max_heartrate < 300){
+		fun_maxheartrate  = " a chicken (275 bpm), but more importantly, consult your GP ";
+	}
+
 
 	//finish point
 	L.marker([lastlat, lastlon]).addTo(mymap);
@@ -276,16 +373,21 @@ function loadXMLDoc(xml) {
 		.bindPopup("<b>Max Elevation</b><br />" + max_elevation.toFixed(2)+ "m").openPopup();
 	
 	//print statements
-	document.getElementById("max_cad").innerHTML =  "max cadence: " + max_cad;
-	document.getElementById("average_time_gap").innerHTML =  "average time gap: " + average_time_gap.toFixed(1) + " seconds";
+	document.getElementById("max_cad").innerHTML =  "max cadence: " + max_cad 
+	document.getElementById("average_time_gap").innerHTML =  "average time gap: " + average_time_gap.toFixed(1) + " seconds"
+	;
 	//.toFixed returns value to x decimal places
+	document.getElementById("average_heartrate").innerHTML =  "average heart rate: " + average_heartrate.toFixed(0) + "bpm";
+	document.getElementById("elev_list").innerHTML =  elev_list;
+	document.getElementById("hr_list").innerHTML =  hr_list;
 	document.getElementById("total_distance").innerHTML =  "total distance: " + total_distance.toFixed(2) + m_or_km;
 	document.getElementById("average_speed").innerHTML =  "average velocity: " + average_speed.toFixed(1) + "m/s";
 	document.getElementById("max_velocity").innerHTML =  "max velocity: " + max_velocity.toFixed(2) + "m/s";
 	document.getElementById("total_climbed").innerHTML =  "total elevation: " + total_elevation.toFixed(2) + "m";
 	document.getElementById("fun_elevation").innerHTML =  "Your height climbed was similar to climbing " + fun_elevation;
 	document.getElementById("fun_velocity").innerHTML =  "Your max velocity was similar to that of " + fun_velocity;
-	document.getElementById("fun_heartrate").innerHTML =  "Your max heart rate was similar to that of " + fun_heartrate;
+	document.getElementById("fun_averageheartrate").innerHTML =  "Your average heart rate was similar to that of " + fun_averageheartrate;
+	document.getElementById("fun_maxheartrate").innerHTML =  "Your max heart rate was similar to that of " + fun_maxheartrate;
 	document.getElementById("max_heartrate").innerHTML =  "max heart rate: " + max_heartrate + "bpm";
 	}
 	//function for calculating distance between points
@@ -308,12 +410,26 @@ function loadXMLDoc(xml) {
 	}
 
  	function showDiv(){
+	
+	  document.getElementById('play').style.display = "block";
+	  document.getElementById('myChart').style.display = "block";
 	  document.getElementById('stats').style.display = "block";
+	  document.getElementById('header2').style.display = "block";
 	  document.getElementById('onmap').style.display = "block";
 	  document.getElementById('facts').style.display = "block";
-	  document.getElementById('header2').style.display = "block";
-	  document.getElementById('mapid').style.display = "block";
+	  document.getElementById('header4').style.display = "none";
+
 	}
+	function dontshowDiv(){
+	  document.getElementById('name_bad').innerHTML = "File format not supported";
+	  document.getElementById('header4').style.display = "block";
+	}
+
+	function missingdata(){
+	  document.getElementById('name_bad').innerHTML = "missing data";
+	  document.getElementById('header4').style.display = "block";
+	}
+
 	function max_velocity_fn(){
 	  elevation_coord.remove(mymap)
 	  heartrate_coord.remove(mymap)
@@ -329,6 +445,53 @@ function loadXMLDoc(xml) {
 	  heartrate_coord.remove(mymap)
 	  elevation_coord.addTo(mymap)
 	}
+	
+	if ('speechSynthesis' in window){
+	    var synth = speechSynthesis;
+	    var flag = false;
+
+	    var playEle = document.querySelector('#play');
+	    var pauseEle = document.querySelector('#pause');
+	    var stopEle = document.querySelector('#stop');
+	 
+	    playEle.addEventListener('click', onClickPlay);
+	    pauseEle.addEventListener('click', onClickPause);
+	    stopEle.addEventListener('click', onClickStop);
+	 
+		function onClickPlay() {
+		    if(!flag){
+			flag = true;
+			utterance = new SpeechSynthesisUtterance(
+				"Welcome to Timthraill, The Statistics for your given GPX, " +
+				document.getElementById("name_only").innerHTML + ", are,  " +
+				document.getElementById("max_cad").innerHTML + ", " +
+				document.getElementById("average_time_gap").innerHTML + ", " +
+				document.getElementById("total_distance").innerHTML + ", " +
+				document.getElementById("average_speed").innerHTML + ", " +
+				document.getElementById("max_velocity").innerHTML + ", " +
+				document.getElementById("max_heartrate").innerHTML + ", " +
+				document.getElementById("total_climbed").innerHTML + ", Some fun facts, " +
+				document.getElementById("fun_elevation").innerHTML + ", " +
+				document.getElementById("fun_velocity").innerHTML + ", " +
+				document.getElementById("fun_heartrate").innerHTML);
+			      
+			utterance.voice = synth.getVoices()[3];
+			utterance.onend = function(){
+			    flag = false;
+			};
+			synth.speak(utterance);
+		    }
+		    if(synth.paused) { 
+			synth.resume();
+		    }
+		}
+	    function onClickPause() {
+	    }
+	    function onClickStop() {
+	    }
+	}
+
+
 
 
 

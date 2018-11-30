@@ -1,53 +1,47 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <title>Timthraill</title>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js" integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA==" crossorigin=""></script>
     <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 
 </head>
-  
 
 
 <body>
-	<h1 class = header style="text-align:center;">Timthraill</h1>
-	<input type="file" class="hidden" id="file-input"  size="60"/>
-	<div class="browse" id="uploadTrigger">Select File</div>
-
-
+	<h1 class = header style="text-align:center;" alt="Timthraill">Timthraill</h1>
+	<div class = header4 id="header4"><p id="name_bad" alt="format not accepted"></p></div>
+	<div><button id=play class=button2 alt="text to speech">Text to Speech (experimental)</button></div>
+	<input type="file" class="hidden" id="file-input"  size="60" alt="select file button"/>
+	<div class="browse" id="uploadTrigger" alt="select file button">Select File</div>
 
 
 <div id="inline">
-	<div class = statistics id="stats">
+	<div class = statistics id="stats" alt="statistics">
+	
 	<h4> Statistics </h4>
-	<p id="elev"></p>
-	<p id="hr"></p>
-	<p id="cad"></p>
-	<p id="total"></p>
-	<p id="average"></p>
-	<p id="max_cad"></p>
-	<p id="time_gap"></p>
-	<p id="time_gap_list"></p>
-	<p id="average_time_gap"></p>
-	<p id="distance"></p>
-	<p id="total_distance"></p>
-	<p id="average_speed"></p>
-	<p id="max_velocity"></p>
-	<p id="max_heartrate"></p>
-	<p id="total_climbed"></p>
-	<p id="lat"></p>
-	<p id="lon"></p>
+		<p id="max_cad" alt=document.getElementById("max_cad")></p>
+		<p id="average_time_gap" alt=document.getElementById("average_time_gap").innerHTML></p>
+		<p id="total_distance" alt=document.getElementById("total_distance").innerHTML></p>
+		<p id="average_speed" alt=document.getElementById("average_speed").innerHTML></p>
+		<p id="max_velocity" alt=document.getElementById("max_velocity").innerHTML></p>
+		<p id="total_climbed" alt=document.getElementById("total_climbed").innerHTML></p>
+		<p id="average_heartrate" alt=document.getElementById("average_heartrate").innerHTML></p>
+		<p id="max_heartrate" alt=document.getElementById("max_heartrate").innerHTML></p>
 	</div>
 
-	<div class = centermap id="mapid" style="width: 800px; height: 500px ;"></div>
+	
+	<div class = centermap id="mapid" alt="The map"></div>
 
-	<div class = facts id="facts">
-	<h4> Some Fun Facts </h4>
-	<p id="fun_elevation"></p>
-	<p id="fun_velocity"></p>
-	<p id="fun_heartrate"></p>
+	<div class = facts id="facts" alt = "some fun facts">
+		<h4> Some Fun Facts </h4>
+		<p id="fun_elevation" alt=document.getElementById("fun_elevation").innerHTML></p>
+		<p id="fun_velocity" alt=document.getElementById("fun_velocity").innerHTML></p>
+		<p id="fun_averageheartrate" alt=document.getElementById("fun_averageheartrate").innerHTML></p>
+		<p id="fun_maxheartrate" alt=document.getElementById("fun_maxheartrate").innerHTML></p>
 	</div>
 
 
@@ -56,17 +50,25 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.4.0/gpx.min.js"></script>
 	<script src="script.js"></script>
-        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
 <div class = header2 id="header2">
-<p id="name"></p>
+	<p id="name" alt=document.getElementById("name").innerHTML></p>
 </div>
 
-<div class = onmap id="onmap">
-<h4> Display On Map </h4>
-<button onclick="max_velocity_fn()" type="button" class = button>Max Velocity</button> 
-<button onclick="max_heartrate_fn()" type="button" class = button>Max Heart Rate</button> 
-<button onclick="max_elevation_fn()" type="button" class = button>Max elevation</button> 
+<div class = onmap id="onmap" alt="click these buttons to display marker on map">
+	<h4> Display On Map </h4>
+	<button class = button onclick= "max_velocity_fn()"alt="displaying max velocity marker on map" >Max Velocity</button> 
+	<button class = button onclick= "max_heartrate_fn()"alt="displaying max heartrate marker on map" >Max Heart Rate</button> 
+	<button class = button onclick= "max_elevation_fn()"alt="displaying max elevation marker on map">Max elevation</button> 
+</div>
+
+<div><canvas class=chart id="myChart" alt="line graph showing heartrate against elevation"></canvas></div>
+
+<div class = header3 id="header3">
+	<p id="name_only"></p>
+	<p id="elev_list"></p>
+	<p id="hr_list"></p>
+	<p id="vel_list"></p>
 </div>
 
 

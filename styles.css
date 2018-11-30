@@ -8,18 +8,37 @@
 body {
   background-color: white;
 }
+
 .centermap {
     margin: auto;
-    width: 90%;
     border: 0px #415a77;
     padding: 10px;
+    width: 80%;
+    height: 500px;
+}
+.picture {
+    margin: auto;
+    border: 0px #415a77;
+    padding: 10px;
+    width: 80%;
+    height: 500px;
+}
+.chart {
+    display:none;
+    margin: auto;
+    border: 0px #415a77;
+    padding: 10px;
+    width: 500px;
+    height: 200px;
+    background-color: #778da9;
+    color: white;
 }
 .header {
     right: 0;
     left: 0;
     margin-right: 0;
     margin-left: 0;
-    border: 10px #415a77 ;
+    border: 5px #415a77 ;
     background-color: #778da9 ;
     font-family: "Arial", Sans-serif;
     font-size: 100px;
@@ -37,6 +56,24 @@ body {
     font-size: 20px;
     text-align:center;
     color: white;
+}
+.header3{ 
+    display:none;
+}
+.header4{
+    display:none;
+    width: 50%;
+    margin:auto;
+    margin-bottom:10px;
+    padding:10px;
+    padding-bottom:10px;
+    border: 10px black ;
+    background-color: #d10600 ;
+    font-family: "Comic Sans";
+    font-size: 25px;
+    text-align:center;
+    color: black;
+    font-weight:bold;
 }
 .statistics {
   float:left;
@@ -89,6 +126,19 @@ body {
   width: 20%;
   color: white;
 }
+
+.button2{
+  display:none;
+  margin:5px;
+  top:5px;
+  margin-left:0px;
+  background-color: #778da9;
+  float:center;
+  width: 20%;
+  height:30px;
+  color: white;
+}
+
 .hidden{
   display:none;
 }
