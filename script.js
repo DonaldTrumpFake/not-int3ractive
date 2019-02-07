@@ -473,9 +473,10 @@ function loadXMLDoc(xml) {
 				document.getElementById("total_climbed").innerHTML + ", Some fun facts, " +
 				document.getElementById("fun_elevation").innerHTML + ", " +
 				document.getElementById("fun_velocity").innerHTML + ", " +
-				document.getElementById("fun_heartrate").innerHTML);
+				document.getElementById("fun_averageheartrate").innerHTML + ", " +
+				document.getElementById("fun_maxheartrate").innerHTML);
 			      
-			utterance.voice = synth.getVoices()[3];
+			utterance.voice = synth.getVoices()[32];
 			utterance.onend = function(){
 			    flag = false;
 			};
