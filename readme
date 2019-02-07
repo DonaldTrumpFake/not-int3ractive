@@ -1,4 +1,4 @@
-So uhhh, im using these resources:
+using these resources:
 
 plugin for gpx parsing to leaflet:
 https://github.com/mpetazzoni/leaflet-gpx
@@ -6,11 +6,4 @@ https://github.com/mpetazzoni/leaflet-gpx
 leaflet:
 https://leafletjs.com/examples/quick-start/
 
-
-The site currently ONLY works with 1.gpx so uhh either use 1.gpx or edit the html. We can generalise gpx viewing later.
-now that i know how to do leaflet layering (it's pretty easy i just suck) the rest shouldn't be too hard.
-
-~Need to decide if the plugin is a reasonable way to parse the gpx
-~Need to work on all the other site features....
-
-~If someone could figure out how to display the other gpx values like the name and distance etc that'd be sick. there are functions in the plugin to do it i just cant get them to work
+Open only in Firefox
